@@ -967,9 +967,9 @@ function iSub(g,t,v,f0,dur){const c=SND.c,o=c.createOscillator(),e=c.createGain(
  e.gain.setValueAtTime(0,t);e.gain.linearRampToValueAtTime(v,t+.008);e.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(e);e.connect(g);o.start(t);o.stop(t+dur+.05)}// "ùm" trầm
 function iBlast(g,t,v,dur,f0=3200){const c=SND.c,s=c.createBufferSource(),lp=c.createBiquadFilter(),e=c.createGain();s.buffer=SND.noise;s.loop=true;lp.type='lowpass';lp.frequency.setValueAtTime(f0,t);lp.frequency.exponentialRampToValueAtTime(180,t+dur*.8);
  e.gain.setValueAtTime(v,t);e.gain.exponentialRampToValueAtTime(.001,t+dur);s.connect(lp);lp.connect(e);e.connect(g);s.start(t,Math.random()*1.5);s.stop(t+dur+.05)}// thân tiếng nổ
-// Kiểu tiếng nổ (chọn trong Tùy chỉnh): 'drum' = trống lễ "tùng" + chiêng ngân (mặc định, ấm, không tiếng xè); 'soft' = "bùm" tròn kiểu nhạc phim;
-// 'video' = nổ mạnh như video LED (tiếng ồn + chũm chọe). kind: touch (mỗi lần chạm), lock (tia chạm tâm), big (khai mở), land (2 mảnh cuối chạm), reveal (mã QR hiện).
-var IMPACT='drum';try{IMPACT=localStorage.getItem('vtImpact')||'drum'}catch{}
+// Kiểu tiếng nổ (chọn trong Tùy chỉnh): 'drum' = trống lễ "tùng" + chiêng ngân (ấm, không tiếng xè); 'soft' = "bùm" tròn kiểu nhạc phim;
+// 'video' = nổ mạnh như video LED (tiếng ồn + chũm chọe) — MẶC ĐỊNH (người dùng chọn 2026-11-19). kind: touch (mỗi lần chạm), lock (tia chạm tâm), big (khai mở), land (2 mảnh cuối chạm), reveal (mã QR hiện).
+var IMPACT='video';try{IMPACT=localStorage.getItem('vtImpact')||'video'}catch{}// mặc định: nổ mạnh như video LED
 function boom(g,t,kind,p=1){
  if(IMPACT==='video'){
   if(kind==='touch'||kind==='lock'||kind==='count')return iHit(g,t,p,true);
