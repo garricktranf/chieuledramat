@@ -105,16 +105,18 @@ footer .textBar #tSave{padding:0 20px;color:#2a1d07;background:linear-gradient(1
 @media(max-width:1300px){footer .textBar .addBtn span{display:none}footer .textBar .addBtn{width:36px;padding:0}}
 /* ===== Hợp nhất 12 mã QR: chữ trượt lên, 12 bảng xoáy vào tâm, hiện một mã QR chung ===== */
 #stage.titleUp #launch{z-index:4}#stage.titleUp:not(.titleOut) #launch{transform:translateY(var(--upY,0px)) scale(var(--upS,1));transition:opacity .6s,transform .8s cubic-bezier(.4,0,.2,1)}
-#merge{position:absolute;inset:0;pointer-events:none;z-index:3}
+#merge{position:absolute;inset:0;pointer-events:none;z-index:3;--qrbg:linear-gradient(165deg,#1a63b6 0,#0e4f9d 48%,#0a4382 100%)}/* chỉ chuyển sắc thẳng: lớp sáng tròn làm trình duyệt vẽ chậm (khựng) */
 #merge .mPlate{position:absolute;left:0;top:0;margin:0;will-change:transform,opacity;box-shadow:0 .8cqw 2cqw #000a,0 0 1.4cqw #7ff3ff55}
 /* Lắp ghép: bảng loé sáng lúc khớp vào ô rồi lật thành một mảnh TRẮNG TRƠN (.mSlice, chưa hiện mã); thẻ QR thật nằm trên cùng, chỉ hiện khi đã lắp đủ. */
 #merge .mGlow{position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 50%,#fff 0,#f2feff 45%,#b4efff 100%);will-change:opacity}
 
 #mergeCard{z-index:40}
-#mergeCard{position:absolute;left:var(--cx,50%);top:var(--cy,70%);width:var(--cw,20cqw);translate:-50% -50%;padding:calc(var(--cw,20cqw)*.03);background:#fff;border:1px solid #e8cd89;border-radius:calc(var(--cw,20cqw)*.045);box-shadow:0 1.5cqw 3cqw #0008,0 0 3cqw #7ff3ff40;font-size:calc(var(--cw,20cqw)/19);overflow:hidden}
+#mergeCard{position:absolute;left:var(--cx,50%);top:var(--cy,70%);width:var(--cw,20cqw);translate:-50% -50%;padding:calc(var(--cw,20cqw)*.03);background:var(--qrbg);border:.12cqw solid #e8c785;border-radius:calc(var(--cw,20cqw)*.045);box-shadow:0 1.5cqw 3cqw #0008,0 0 3cqw #7ff3ff40,inset 0 1px 0 #ffffff2e;font-size:calc(var(--cw,20cqw)/19);overflow:hidden}
 #mergeCard{visibility:hidden;opacity:0}
+/* vẽ sẵn thẻ (gần như trong suốt) ngay khi bắt đầu lắp → lúc 2 mảnh cuối chạm chỉ việc hiện ra, không khựng */
+#stage.mergePre:not(.mergeIn) #mergeCard{visibility:visible;opacity:.001}
 /* Mảnh lắp: ô trắng trơn đúng cỡ ô, đường nối mảnh mờ (viền thường: bóng đổ trong trên mảnh lật 3D vẽ rất chậm); 2 mảnh cuối được "nhấc lên" (viền xanh sáng + bóng đổ) trước khi lao vào ô. */
-#merge .mSlice{position:absolute;box-sizing:border-box;z-index:5;background:linear-gradient(165deg,#fff 0,#f6f9fb 55%,#e9f0f4 100%);border:.05cqw solid #c5d4dd;will-change:transform}
+#merge .mSlice{position:absolute;box-sizing:border-box;z-index:5;background:var(--qrbg);background-repeat:no-repeat;border:.05cqw solid;border-color:#ffffff26 #0000002e #0000002e #ffffff26;will-change:transform}
 #merge .mSlice.lift{z-index:8;box-shadow:inset 0 0 0 .14cqw #8ff3ff,inset 0 0 1.3cqw #7ff3ff73,0 1.1cqw 2cqw #000a,0 0 1.6cqw #7ff3ff80}
 /* Cặp cuối chạm ô: thẻ thật thay đúng chỗ các mảnh, vẫn PHỦ TRẮNG (chưa lộ mã) — nảy nhẹ một cái (đanh) → SÁNG NHẸ lên (trắng hơn,
    quầng sáng mờ quanh thẻ) → giữ một nhịp → lớp trắng tan dần, lộ ra mã QR; tia quét chạy sau khi mã đã hiện rõ. */
@@ -124,11 +126,12 @@ footer .textBar #tSave{padding:0 20px;color:#2a1d07;background:linear-gradient(1
 #mergeHalo{position:absolute;left:var(--cx,50%);top:var(--cy,70%);width:calc(var(--cw,20cqw)*2);height:calc(var(--cw,20cqw)*2.3);translate:-50% -50%;border-radius:50%;pointer-events:none;z-index:39;opacity:0;background:radial-gradient(closest-side,#ffffffcc 0,#e2fcffa6 38%,#8ff3ff59 64%,#7ff3ff00 100%);will-change:opacity,transform}
 #stage.mergeIn #mergeHalo{animation:haloLight 1.2s ease-in-out}
 @keyframes haloLight{0%,12%{opacity:0;transform:scale(.8)}42%{opacity:.6;transform:scale(1)}52%{opacity:.6;transform:scale(1.03)}100%{opacity:0;transform:scale(1.12)}}
-#mergeCard:before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;background:#eef4f7}
+#mergeCard:before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;background:#0f50a0;will-change:opacity,filter}
 #stage.mergeIn #mergeCard:before{animation:cardLight 1.2s ease-in-out}
-@keyframes cardLight{0%,14%{opacity:1;background-color:#eef4f7}42%,52%{opacity:1;background-color:#fff}92%,100%{opacity:0;background-color:#fff}}
-#mergeCard img{display:block;width:100%;aspect-ratio:1;object-fit:contain}
-.mLink{margin-top:.35em;padding-top:.45em;border-top:1px solid #d9dee6;text-align:center;color:#0b2e55;font:700 1em/1.2 "Segoe UI",Arial,sans-serif;overflow-wrap:anywhere}.mLink small{display:block;margin-bottom:.15em;font-size:.52em;font-weight:600;letter-spacing:.14em;color:#5b6b7f}.mLink[hidden]{display:none}
+@keyframes cardLight{0%,14%{opacity:1;filter:brightness(1)}42%,52%{opacity:1;filter:brightness(1.45) saturate(1.05)}92%,100%{opacity:0;filter:brightness(1.45) saturate(1.05)}}
+#mergeCard img{display:block;width:100%;aspect-ratio:1;object-fit:contain;filter:invert(1);mix-blend-mode:screen}/* mã QR trắng trên nền xanh như 12 bảng */
+#stage.qrLight #mergeCard img{filter:none;border-radius:calc(var(--cw,20cqw)*.035)}/* dự phòng: mã xanh trên ô trắng */
+.mLink{margin-top:.35em;padding-top:.45em;border-top:1px solid #ffffff40;text-align:center;color:#fff;font:700 1em/1.2 "Segoe UI",Arial,sans-serif;overflow-wrap:anywhere}.mLink small{display:block;margin-bottom:.15em;font-size:.52em;font-weight:600;letter-spacing:.14em;color:#b3cff0}.mLink[hidden]{display:none}
 #mergeCard:after{content:"";position:absolute;left:0;right:0;top:0;height:14%;pointer-events:none;background:linear-gradient(180deg,transparent,#38c6ff22 60%,#38c6ffaa 96%,#fff 100%);transform:translateY(-110%)}
 #stage.mergeIn #mergeCard:after{z-index:2;animation:qrscan2 1.4s ease-in-out 1.15s 2}@keyframes qrscan2{to{transform:translateY(760%)}}
 @media(prefers-reduced-motion:reduce){#stage.mergeIn #mergeCard,#stage.mergeIn #mergeCard:before,#stage.mergeIn #mergeHalo{animation-duration:.4s}#mergeCard:after{display:none}}
@@ -226,7 +229,7 @@ const BG='background',qrKey=i=>'qr'+i,qr=i=>overrides[qrKey(i)]||assets.original
 const LINK2='link2',DEFAULT_LINK='thongtinvungtau.vn/kham-pha-360',demoLink=()=>overrides[LINK2]!=null?overrides[LINK2]:(overrides[qrKey(2)]?'':DEFAULT_LINK);
 // Mã QR hợp nhất (12 bảng xoáy vào tâm thành một mã): mặc định là mã thongtinvungtau.vn/kham-pha-360; thay được trong Tùy chỉnh.
 const QR_MAIN='qrMain',LINK_MAIN='linkMain',mainLink=()=>overrides[LINK_MAIN]!=null?overrides[LINK_MAIN]:(overrides[QR_MAIN]?'':DEFAULT_LINK);
-function clearMerge(){el('merge').querySelectorAll('.mPlate,.mSlice').forEach(p=>p.remove());el('mergeCard').getAnimations().forEach(a=>{if(!(window.CSSAnimation&&a instanceof CSSAnimation))a.cancel()});stage.classList.remove('titleUp','mergeIn');const L=el('launch');L.style.removeProperty('--upY');L.style.removeProperty('--upS')}
+function clearMerge(){el('merge').querySelectorAll('.mPlate,.mSlice').forEach(p=>p.remove());el('mergeCard').getAnimations().forEach(a=>{if(!(window.CSSAnimation&&a instanceof CSSAnimation))a.cancel()});stage.classList.remove('titleUp','mergeIn','mergePre');const L=el('launch');L.style.removeProperty('--upY');L.style.removeProperty('--upS')}
 // Vị trí 6 nút chạm = tâm nút, tính theo % khung trình chiếu. Chỉnh bằng kéo thả (Tùy chỉnh → Chỉnh vị trí); lưu cùng các tùy chỉnh khác và đi theo bản HTML xuất ra.
 const PAD_N=6,DEFAULT_PADS=[[14.7,74.4],[28.82,75.65],[42.94,76.28],[57.06,76.28],[71.18,75.65],[85.3,74.4]];
 const padPos=()=>{const p=overrides.padPos,ok=q=>Array.isArray(q)&&q.length===2&&q.every(Number.isFinite);
@@ -454,6 +457,7 @@ function refreshImages(){
  el('mergeQR').src=overrides[QR_MAIN]||assets.originalQR;const ml=mainLink(),mb=el('mergeLink');mb.hidden=!ml;mb.replaceChildren();
  if(ml){const s=document.createElement('small');s.textContent='HOẶC TRUY CẬP';mb.append(s,ml)}
  if(!padEdit)placePads();
+ stage.classList.toggle('qrLight',overrides.qrStyle==='light');// màu mã QR hợp nhất: trắng trên xanh (mặc định) / xanh trên ô trắng
  renderLayers();
 }
 function render(){
@@ -638,7 +642,7 @@ function celebrate(){
   L.style.transformOrigin='50% '+(top/H*100).toFixed(2)+'%';L.style.setProperty('--upY',((T0-top)/H*100).toFixed(2)+'%');L.style.setProperty('--upS',s.toFixed(3));stage.classList.add('titleUp');
   // Mã QR hợp nhất nằm giữa khoảng trống phía dưới chữ.
   const yA=T0+hb*s+H*.035,yB=H*.955,av=yB-yA,hc=Math.max(H*.3,Math.min(av,H*.62)),cw=hc/1.19,cx=W/2,cy=Math.min(yB-hc/2,Math.max(yA+hc/2,(yA+yB)/2));
-  const card=el('mergeCard');for(const e of [card,el('mergeHalo')]){e.style.setProperty('--cw',cq(cw,W));e.style.setProperty('--cx',(cx/W*100).toFixed(2)+'%');e.style.setProperty('--cy',(cy/H*100).toFixed(2)+'%')}
+  const card=el('mergeCard');stage.classList.add('mergePre');for(const e of [card,el('mergeHalo')]){e.style.setProperty('--cw',cq(cw,W));e.style.setProperty('--cx',(cx/W*100).toFixed(2)+'%');e.style.setProperty('--cy',(cy/H*100).toFixed(2)+'%')}
   // Khung lắp 3 cột × 4 hàng phủ đúng thẻ QR. Bảng bên trái lắp cột trái, bên phải lắp cột phải (từ trên xuống),
   // rồi tới cột giữa; 2 ô chính giữa là cặp cuối cùng.
   const cardW=card.offsetWidth*k0,cardH=card.offsetHeight*k0,sw=cardW/3,sh=cardH/4;
@@ -658,13 +662,13 @@ function celebrate(){
   for(let i=0;i<12;i++){if(i<2){V.push(v0);continue}const dA=A[i]-A[i-2];V.push(Math.min(S*4.8,Math.max(S*1.04/dA,(S*1.04+dS(i-2)+V[i-2]*TD/2-dS(i))/(dA+TD/2))))}
   V[10]=V[11]=Math.max(V[10],V[11]);// cặp cuối: cùng tốc độ → lắp đúng cùng lúc
   mC={x:cx,y:cy,cw,cardW,cardH,S,TD,TC,TF,LIFT,HD,HJ,HB,TJ,TS,hit:0,flash:[],impact:null};
-  const R=cq(cw*.045,W),BD='1px solid #e8cd89';// viền vàng ở mép ngoài + 4 góc bo tròn, giống mép thẻ
+  const R=cq(cw*.045,W),BD='.12cqw solid #e8c785';// viền vàng ở mép ngoài + 4 góc bo tròn, giống mép thẻ
   mPl=[...grid.children].map((p,i)=>{const [r,c]=SLOT[i],side=i%2?1:-1,v=V[i],last=i>=10,sx=cx-cardW/2+(c+.5)*sw,sy=cy-cardH/2+(r+.5)*sh,tx=last?sx+side*HD:sx,xa=tx+side*v*TD/2,x0=cx+side*X0,Tl=Math.abs(x0-xa)/v;
    const g=p.cloneNode(true);g.className='plate mPlate';g.removeAttribute('style');g.style.width=cq(S,W);g.style.opacity=0;g.style.zIndex=10+i;// bảng đến sau bay phía trên các mảnh đã lắp
    const glow=document.createElement('i');glow.className='mGlow';g.append(glow);box.append(g);
    // Mảnh của ô này: ô TRẮNG TRƠN đúng cỡ ô (chưa hiện mã QR — mã chỉ hiện khi thẻ đã lắp đủ và sáng lên).
    const sl=document.createElement('div');sl.className='mSlice';
-   Object.assign(sl.style,{left:((sx-sw/2)/W*100).toFixed(3)+'%',top:((sy-sh/2)/H*100).toFixed(3)+'%',width:cq(sw,W),height:cq(sh,W),visibility:'hidden'});
+   Object.assign(sl.style,{left:((sx-sw/2)/W*100).toFixed(3)+'%',top:((sy-sh/2)/H*100).toFixed(3)+'%',width:cq(sw,W),height:cq(sh,W),visibility:'hidden',backgroundSize:cq(cardW,W)+' '+cq(cardH,W),backgroundPosition:cq(-c*sw,W)+' '+cq(-r*sh,W)});// mỗi ô = đúng phần của bề mặt thẻ
    // 4 mảnh góc bo tròn như thẻ — dùng clip-path (border-radius trên mảnh lật 3D làm trình duyệt vẽ lại rất chậm, khựng ~30–60 ms).
    const rr=[!r&&!c,!r&&c===2,r===3&&c===2,r===3&&!c];if(rr.some(Boolean))sl.style.clipPath='inset(0 round '+rr.map(k=>k?R:'0').join(' ')+')';
    if(!r)sl.style.borderTop=BD;if(r===3)sl.style.borderBottom=BD;if(!c)sl.style.borderLeft=BD;if(c===2)sl.style.borderRight=BD;box.append(sl);
@@ -1224,6 +1228,8 @@ function showOptions(){
  const minp=document.createElement('input');minp.type='text';minp.value=mainLink();minp.placeholder='Để trống nếu không muốn hiện link';minp.setAttribute('aria-label','Link hiển thị dưới mã QR hợp nhất');
  const msave=document.createElement('button');msave.textContent='Lưu link';msave.onclick=()=>{if(!editing)update({...overrides,[LINK_MAIN]:minp.value.trim()},'Đã cập nhật link mã QR hợp nhất.')};
  minp.onkeydown=e=>{if(e.key==='Enter')msave.click()};mr.append(mlb,minp,msave);body.append(mr);
+ const qs=document.createElement('div');qs.className='settingrow';const ql=document.createElement('strong');ql.textContent='Màu mã QR hợp nhất (nếu máy quét không đọc được mã trắng trên nền xanh, chọn “Xanh trên ô trắng”)';qs.append(ql);
+ for(const [k,lab] of [['blue','Trắng trên nền xanh'],['light','Xanh trên ô trắng']]){const b=document.createElement('button');b.textContent=lab;if((overrides.qrStyle==='light'?'light':'blue')===k)b.className='primary';b.onclick=()=>{if(!editing)update({...overrides,qrStyle:k==='light'?'light':null},'Đã đổi màu mã QR hợp nhất.')};qs.append(b)}body.append(qs);
  // Mục "Cảnh Quét thử" (chỉ hiện khi bật lại các cảnh 02–04): mã QR (dùng chung với bảng 03 · Khu Đình Thắng Tam) + link chữ dưới mã.
  if(EXTRA_SCENES){
  const lh=document.createElement('h3');lh.className='sectionTitle';lh.textContent='Cảnh Quét thử';body.append(lh);
